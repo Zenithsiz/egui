@@ -130,9 +130,11 @@ pub struct RenderPass {
     /// sampler.
     textures: HashMap<egui::TextureId, (Option<wgpu::Texture>, wgpu::BindGroup)>,
     next_user_texture_id: u64,
+    /*
     /// Storage for use by [`egui::PaintCallback`]'s that need to store resources such as render
     /// pipelines that must have the lifetime of the renderpass.
     pub paint_callback_resources: type_map::TypeMap,
+    */
 }
 
 impl RenderPass {
@@ -287,7 +289,7 @@ impl RenderPass {
             texture_bind_group_layout,
             textures: HashMap::new(),
             next_user_texture_id: 0,
-            paint_callback_resources: TypeMap::default(),
+            //paint_callback_resources: TypeMap::default(),
         }
     }
 
@@ -398,7 +400,7 @@ impl RenderPass {
                     }
                 }
                 Primitive::Callback(callback) => {
-                    let cbfn = if let Some(c) = callback.callback.downcast_ref::<CallbackFn>() {
+                    let _cbfn = if let Some(c) = callback.callback.downcast_ref::<CallbackFn>() {
                         c
                     } else {
                         // We already warned in the `prepare` callback
@@ -437,6 +439,8 @@ impl RenderPass {
                         }
                         rpass.set_scissor_rect(x, y, width, height);
 
+                        todo!("Paint callback");
+                        /*
                         (cbfn.paint)(
                             PaintCallbackInfo {
                                 viewport: callback.rect,
@@ -447,6 +451,7 @@ impl RenderPass {
                             rpass,
                             &self.paint_callback_resources,
                         );
+                        */
                     }
                 }
             }
@@ -721,14 +726,17 @@ impl RenderPass {
                     mesh_idx += 1;
                 }
                 Primitive::Callback(callback) => {
-                    let cbfn = if let Some(c) = callback.callback.downcast_ref::<CallbackFn>() {
+                    let _cbfn = if let Some(c) = callback.callback.downcast_ref::<CallbackFn>() {
                         c
                     } else {
                         tracing::warn!("Unknown paint callback: expected `egui_gpu::CallbackFn`");
                         continue;
                     };
 
+                    todo!("Paint callback");
+                    /*
                     (cbfn.prepare)(device, queue, &mut self.paint_callback_resources);
+                    */
                 }
             }
         }
